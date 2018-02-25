@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScienceDev</title>
+    <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
+    <style>
+        .similarBtnWidth {
+            width: 400px !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn" style = "width: 200px;">OK</button>
+</div>
+
+<div id = "mainBox">
+    <div id = "imgBox" align = "center">
+        <img src = "./images/titleImage.png" width = "270px" height = "200px">
+    </div>
+    <h1>Главное меню</h1>
+    <h2 id = "loginLabel"></h2>
+    <button class = "btn similarBtnWidth" id = "myPageBtn">Моя страница</button>
+    <br>
+    <button class = "btn similarBtnWidth" id = "othetUserBtn">Страницы пользователей</button>
+    <br>
+    <button class = "btn similarBtnWidth" id = "exitBtn">Выход</button>
+</div>
+
+<script src = "./../jsScripts/ajaxFunctions.js"></script>
+<script src = "./../jsScripts/alertBoxManage.js"></script>
+<script src = "./../jsScripts/stringControl.js"></script>
+<script src = "./../jsScripts/StorageManager.js"></script>
+<script src = "./../jsScripts/ControlUserHash.js"></script>
+<script src = "./../jsScripts/printTextTags.js"></script>
+
+<script>
+    let exitBtn = null;
+    let loginLabel = null;
+    let myPageBtn = null;
+    let othetUserBtn = null;
+    
+    window.onload = function() {
+        controlUserHash();
+
+        loginLabel = find("loginLabel");
+        if(getStorageVar("man_nickname") !== null && getStorageVar("man_nickname") !== undefined) {
+            loginLabel.innerHTML = "Пользователь: " + getStorageVar("man_nickname");
+        }
+
+        exitBtn = find("exitBtn");
+        exitBtn.onclick = function () {
+            // очистка локального хранилища
+            clearStorage();
+            window.location = "/authorization";
+        };
+
+        myPageBtn = find("myPageBtn");
+        myPageBtn.onclick = function() {
+            window.location = "/mypage";
+        };
+
+        othetUserBtn = find("othetUserBtn");
+        othetUserBtn.onclick = () => {
+            window.location = "/otheruserpage";
+        }
+    }
+</script>
+
+</body>
+</html>

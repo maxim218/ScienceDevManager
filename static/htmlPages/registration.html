@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ScienceDev</title>
+    <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
+</head>
+<body>
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn" style = "width: 200px;">OK</button>
+</div>
+
+
+<div id = "mainBox">
+    <div id = "imgBox" align = "center">
+        <img src = "./images/titleImage.png" width = "270px" height = "200px">
+    </div>
+    <h1>Регистрация</h1>
+    Логин
+    <br>
+    <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" maxlength = "10" id = "loginFieldObject" value = "">
+    <br>
+    Пароль
+    <br>
+    <input type = "password" spellcheck = 'false' autocomplete = 'off' class = "passwordField" maxlength = "10" id = "passwordFieldObject" value = "">
+    <br>
+    <button class = "btn" id = "btnRegObj">Зарегистрироваться</button>
+    <br>
+    <button class = "btn" id = "btnGoToAuthObj">Перейти к авторизации</button>
+</div>
+
+<script src = "./../jsScripts/ajaxFunctions.js"></script>
+<script src = "./../jsScripts/alertBoxManage.js"></script>
+<script src = "./../jsScripts/stringControl.js"></script>
+
+<script>
+    let log_t = null;
+    let pas_t = null;
+    let reg_b = null;
+    let go_to_auth_btn = null;
+
+    window.onload = function() {
+        log_t = find("loginFieldObject");
+        pas_t = find("passwordFieldObject");
+        reg_b = find("btnRegObj");
+        go_to_auth_btn = find("btnGoToAuthObj");
+
+        go_to_auth_btn.onclick = () => {
+            window.location = "/authorization";
+        };
+
+        reg_b.onclick = function() {
+            const login = log_t.value;
+            const password = pas_t.value;
+
+            if(login === "") {
+                showAlert("Поле ввода логина пусто.");
+                return;
+            }
+
+            if(password === "") {
+                showAlert("Поле ввода пароля пусто.");
+                return;
+            }
+
+            if(new ContentStringWatcher(login).normalString() === false) {
+                showAlert("Поле ввода логина содержит запретные символы.");
+                return;
+            }
+
+            if(new ContentStringWatcher(password).normalString() === false) {
+                showAlert("Поле ввода пароля содержит запретные символы.");
+                return;
+            }
+
+            sendPost("registrate_user", {
+                loginField: login,
+                passwordField: password
+            }, (result) => {
+                if(result === "__YES__") {
+                    showAlert("Регистрация прошла успешно.", () => {
+                        window.location = "/authorization";
+                    });
+                    return;
+                }
+
+                if(result === "__NO__") {
+                    showAlert("Пользователь с таким логином уже есть в базе данных.");
+                    return;
+                }
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

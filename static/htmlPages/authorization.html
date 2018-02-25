@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ScienceDev</title>
+    <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
+</head>
+<body>
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn" style = "width: 200px;">OK</button>
+</div>
+
+<div id = "mainBox">
+    <div id = "imgBox" align = "center">
+        <img src = "./images/titleImage.png" width = "270px" height = "200px">
+    </div>
+    <h1>Авторизация</h1>
+    Логин
+    <br>
+    <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" maxlength = "10" id = "loginFieldObject" value = "">
+    <br>
+    Пароль
+    <br>
+    <input type = "password" spellcheck = 'false' autocomplete = 'off' class = "passwordField" maxlength = "10" id = "passwordFieldObject" value = "">
+    <br>
+    <button class = "btn" id = "btnAuthInSystem">Войти в аккаунт</button>
+    <br>
+    <button class = "btn" id = "btnGoToRegPage">Перейти к регистрации</button>
+</div>
+
+<script src = "./../jsScripts/ajaxFunctions.js"></script>
+<script src = "./../jsScripts/alertBoxManage.js"></script>
+<script src = "./../jsScripts/stringControl.js"></script>
+<script src = "./../jsScripts/StorageManager.js"></script>
+<script src = "./../jsScripts/ControlUserHash.js"></script>
+
+<script>
+    let log_t = null;
+    let pas_t = null;
+    let auth_b = null;
+    let go_to_reg_page = null;
+
+    window.onload = function() {
+        tryToAuth();
+
+        log_t = find("loginFieldObject");
+        pas_t = find("passwordFieldObject");
+        auth_b = find("btnAuthInSystem");
+        go_to_reg_page = find("btnGoToRegPage");
+
+        go_to_reg_page.onclick = function() {
+            window.location = "/registration";
+        };
+
+        auth_b.onclick = () => {
+            const login = log_t.value;
+            const password = pas_t.value;
+
+
+            if(login === "") {
+                showAlert("Поле ввода логина пусто.");
+                return;
+            }
+
+            if(password === "") {
+                showAlert("Поле ввода пароля пусто.");
+                return;
+            }
+
+            if(new ContentStringWatcher(login).normalString() === false) {
+                showAlert("Поле ввода логина содержит запретные символы.");
+                return;
+            }
+
+            if(new ContentStringWatcher(password).normalString() === false) {
+                showAlert("Поле ввода пароля содержит запретные символы.");
+                return;
+            }
+
+            sendPost("authorize_user", {
+                loginField: login,
+                passwordField: password
+            }, (resultString) => {
+                const result = JSON.parse(resultString);
+
+                if(result.man_password !== null && result.man_password !== undefined) {
+                    showAlert("Авторизация в системе прошла успешно.", () => {
+                        // очистка локального хранилища
+                        clearStorage();
+                        // сохранение логина и hash пароля
+                        setStorageVar("man_nickname", result.man_nickname);
+                        setStorageVar("man_password", result.man_password);
+                        window.location = "/mainmenu";
+                    });
+                    return;
+                }
+
+                if(result.man_password === null || result.man_password === undefined) {
+                    showAlert("Неверный логин или пароль.");
+                    return;
+                }
+            });
+        }
+    }
+</script>
+
+</body>
+</html>
