@@ -1,13 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>ScienceDev</title>
     <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
-    <style>
-        .similarBtnWidth {
-            width: 400px !important;
-        }
-    </style>
 </head>
 <body>
 
@@ -23,15 +18,9 @@
     <div id = "imgBox" align = "center">
         <img src = "./images/titleImage.png" width = "270px" height = "200px">
     </div>
-    <h1>Главное меню</h1>
+    <h1>Мои ролики</h1>
     <h2 id = "loginLabel"></h2>
-    <button class = "btn similarBtnWidth" id = "myPageBtn">Моя страница</button>
-    <br>
-    <button class = "btn similarBtnWidth" id = "othetUserBtn">Страницы пользователей</button>
-    <br>
-    <button class = "btn similarBtnWidth" id = "myMoviesBtn">Мои ролики</button>
-    <br>
-    <button class = "btn similarBtnWidth" id = "exitBtn">Выход</button>
+    <button class = "btn" onclick = "window.location = '/mainmenu';">Главное меню</button>
 </div>
 
 <script src = "./../jsScripts/ajaxFunctions.js"></script>
@@ -42,40 +31,12 @@
 <script src = "./../jsScripts/printTextTags.js"></script>
 
 <script>
-    let exitBtn = null;
-    let loginLabel = null;
-    let myPageBtn = null;
-    let othetUserBtn = null;
-    let myMoviesBtn = null;
-    
     window.onload = function() {
         controlUserHash();
 
         loginLabel = find("loginLabel");
         if(getStorageVar("man_nickname") !== null && getStorageVar("man_nickname") !== undefined) {
             loginLabel.innerHTML = "Пользователь: " + getStorageVar("man_nickname");
-        }
-
-        exitBtn = find("exitBtn");
-        exitBtn.onclick = function () {
-            // очистка локального хранилища
-            clearStorage();
-            window.location = "/authorization";
-        };
-
-        myPageBtn = find("myPageBtn");
-        myPageBtn.onclick = function() {
-            window.location = "/mypage";
-        };
-
-        othetUserBtn = find("othetUserBtn");
-        othetUserBtn.onclick = () => {
-            window.location = "/otheruserpage";
-        };
-
-        myMoviesBtn = find("myMoviesBtn");
-        myMoviesBtn.onclick = function () {
-            window.location = "/mymovies";
         }
     }
 </script>
