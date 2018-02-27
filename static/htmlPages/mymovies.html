@@ -3,6 +3,21 @@
 <head>
     <title>ScienceDev</title>
     <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
+    <style>
+        td {
+            color: white;
+            padding: 8px;
+            width: 430px;
+            border: 1px solid white;
+            cursor: pointer;
+        }
+
+        td:hover {
+            background-color: #CCCCCC;
+            color: black;
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
 
@@ -21,6 +36,16 @@
     <h1>Мои ролики</h1>
     <h2 id = "loginLabel"></h2>
     <button class = "btn" onclick = "window.location = '/mainmenu';">Главное меню</button>
+    <br>
+    <div style = "padding: 15px;"></div>
+    Название ролика
+    <br>
+    <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" maxlength = "10" id = "rolicField" value = "">
+    <br>
+    <button class = "btn" id = "arrRolicBtn">Создать ролик</button>
+    <br>
+    <div style = "padding: 15px;"></div>
+    <div id = "myRolixBox"></div>
 </div>
 
 <script src = "./../jsScripts/ajaxFunctions.js"></script>
@@ -31,12 +56,77 @@
 <script src = "./../jsScripts/printTextTags.js"></script>
 
 <script>
+    let myRolixBox = null;
+    let rolicField = null;
+    let arrRolicBtn = null;
+
+    function getRolic(element) {
+        console.log(element.innerHTML);
+    }
+
+    function getRolix(login) {
+        myRolixBox.innerHTML = "";
+
+        sendPost("get_rolix_list", {
+            loginField: login
+        }, (result) => {
+            console.log("Rolix: " + result);
+            let arr = JSON.parse(result);
+            myRolixBox.innerHTML = "";
+
+            if(arr.length > 0) {
+                let html = "";
+                myRolixBox.innerHTML = "";
+
+                for (let i = 0; i < arr.length; i++) {
+                    const rolic = arr[i];
+                    if (rolic !== "") {
+                        html = html + "<tr><td onclick = 'getRolic(this);'>" + rolic.toString() + "</td></tr>";
+                    }
+                }
+
+                html = "<table>" + html + "</table>";
+                html = "<h2>Мои ролики</h2>" + html;
+                myRolixBox.innerHTML = html;
+            } else {
+                myRolixBox.innerHTML = "<h2>Мои ролики</h2>" + "<h3>На данный момент нет созданных роликов.</h3>";
+            }
+        });
+    }
+
     window.onload = function() {
         controlUserHash();
 
+        let login = "";
         loginLabel = find("loginLabel");
         if(getStorageVar("man_nickname") !== null && getStorageVar("man_nickname") !== undefined) {
-            loginLabel.innerHTML = "Пользователь: " + getStorageVar("man_nickname");
+            login =  getStorageVar("man_nickname");
+            loginLabel.innerHTML = "Пользователь: " + login;
+        }
+
+        myRolixBox = find("myRolixBox");
+        getRolix(login);
+
+        rolicField = find("rolicField");
+
+        arrRolicBtn = find("arrRolicBtn");
+
+        arrRolicBtn.onclick = function() {
+            const value = rolicField.value;
+
+            if(value === "") {
+                showAlert("Поле ввода названия ролика пусто.");
+                return;
+            }
+
+            if(new ContentStringWatcher(value).normalString() === false) {
+                showAlert("Поле ввода названия ролика содержит запретные символы.");
+                return;
+            }
+
+            const movie_name = value.toString();
+
+
         }
     }
 </script>
