@@ -31,6 +31,8 @@
     <br>
     <button class = "btn similarBtnWidth" id = "myMoviesBtn">Мои ролики</button>
     <br>
+    <button class = "btn similarBtnWidth" id = "my3DmodelsBtn">Мои 3D модели</button>
+    <br>
     <button class = "btn similarBtnWidth" id = "exitBtn">Выход</button>
 </div>
 
@@ -47,6 +49,7 @@
     let myPageBtn = null;
     let othetUserBtn = null;
     let myMoviesBtn = null;
+    let my3DmodelsBtn = null;
     
     window.onload = function() {
         controlUserHash();
@@ -76,6 +79,12 @@
         myMoviesBtn = find("myMoviesBtn");
         myMoviesBtn.onclick = function () {
             window.location = "/mymovies";
+        };
+
+        my3DmodelsBtn = find("my3DmodelsBtn");
+        my3DmodelsBtn.onclick = () => {
+            console.log("My 3d Models");
+            window.location = "/my3dmodels";
         }
     }
 </script>

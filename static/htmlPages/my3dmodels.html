@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScienceDev</title>
+    <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
+    <style>
+        td {
+            color: white;
+            padding: 8px;
+            width: 430px;
+            border: 1px solid white;
+            cursor: pointer;
+        }
+
+        td:hover {
+            background-color: #CCCCCC;
+            color: black;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn" style = "width: 200px;">OK</button>
+</div>
+
+<div id = "mainBox">
+    <div id = "imgBox" align = "center">
+        <img src = "./images/titleImage.png" width = "270px" height = "200px">
+    </div>
+    <h1>Мои 3D модели</h1>
+    <h2 id = "loginLabel"></h2>
+    <button class = "btn" onclick = "window.location = '/mainmenu';">Главное меню</button>
+    <br>
+    <div style = "padding: 15px;"></div>
+    Название 3D модели
+    <br>
+    <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" maxlength = "10" id = "model3Dfield" value = "">
+    <br>
+    <button class = "btn" id = "create3DmodelBtn">Создать 3D модель</button>
+    <br>
+    <div style = "padding: 15px;"></div>
+    <div id = "my3DmodelsBox"></div>
+    <br>
+</div>
+
+
+<script src = "./../jsScripts/ajaxFunctions.js"></script>
+<script src = "./../jsScripts/alertBoxManage.js"></script>
+<script src = "./../jsScripts/stringControl.js"></script>
+<script src = "./../jsScripts/StorageManager.js"></script>
+<script src = "./../jsScripts/ControlUserHash.js"></script>
+<script src = "./../jsScripts/printTextTags.js"></script>
+
+<script>
+    let my3DmodelsBox = null;
+    let create3DmodelBtn = null;
+    let model3Dfield = null;
+
+    function get3Dproj(element) {
+        const projName = element.innerHTML;
+        console.log(projName);
+    }
+
+    function load3Dprojects() {
+        const operation = "get_three_projects_of_user";
+        my3DmodelsBox.innerHTML = "";
+
+        sendPost(operation, {
+            loginField: getStorageVar("man_nickname")
+        }, (result) => {
+            my3DmodelsBox.innerHTML = "";
+
+            console.log(result);
+            let mass = JSON.parse(result);
+
+            if(mass.length === 0) {
+                my3DmodelsBox.innerHTML = "";
+                let content = "<h2>Мои 3D модели</h2>";
+                content += "<h3>На данный момент нет созданных 3D моделей.</h3>";
+                my3DmodelsBox.innerHTML = content;
+                return;
+            }
+
+            if(mass.length > 0) {
+                my3DmodelsBox.innerHTML = "";
+                let html = "";
+                let content = "<h2>Мои 3D модели</h2>";
+                for(let i = 0; i < mass.length; i++) {
+                    const element = mass[i];
+                    if(element !== "") {
+                        html = html + "<tr><td onclick = 'get3Dproj(this);'>" + element.toString() + "</td></tr>";
+                    }
+                }
+                html = "<table>" + html + "</table>";
+                content += html;
+                my3DmodelsBox.innerHTML = content;
+            }
+        });
+    }
+
+    window.onload = function() {
+        controlUserHash();
+
+        my3DmodelsBox = find("my3DmodelsBox");
+        my3DmodelsBox.innerHTML = "";
+
+        let login = "";
+        loginLabel = find("loginLabel");
+        if(getStorageVar("man_nickname") !== null && getStorageVar("man_nickname") !== undefined) {
+            login =  getStorageVar("man_nickname");
+            loginLabel.innerHTML = "Пользователь: " + login;
+        }
+
+        load3Dprojects();
+
+        model3Dfield = find("model3Dfield");
+        create3DmodelBtn = find("create3DmodelBtn");
+        create3DmodelBtn.onclick = function() {
+            console.log("btn");
+
+            const value = model3Dfield.value + "";
+
+            if(value === "") {
+                showAlert("Поле ввода названия 3D модели пусто.");
+                return;
+            }
+
+            if(new ContentStringWatcher(value).normalString() === false) {
+                showAlert("Поле ввода названия 3D модели содержит запретные символы.");
+                return;
+            }
+
+            console.log("Validation OK");
+        }
+    }
+</script>
+
+</body>
+</html>
