@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ScienceDev</title>
+    <style>
+        @font-face {
+            font-family: myFamily;
+            src: url(./fonts/9041.ttf);
+        }
+
+        body {
+            background-color: #666666;
+            color: black;
+            font-family: myFamily;
+            font-size: 20px;
+            padding: 0px;
+        }
+
+        .textField {
+            color: black;
+            font-family: myFamily;
+            font-size: 20px;
+            padding: 5px;
+            border: 1px solid black;
+            width: 200px;
+            margin-left: 15px;
+            margin-bottom: 15px;
+            outline: none !important;
+
+        }
+
+        .btn {
+            color: white;
+            font-family: myFamily;
+            font-size: 20px;
+            padding: 10px;
+            border: 1px solid white;
+            width: 200px;
+            margin-left: 0px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            background-color: black;
+            outline: none !important;
+        }
+
+        table {
+            margin-left: 25px;
+            border: none;
+        }
+
+        .tdClass {
+            background-color: white;
+            padding: 15px;
+        }
+
+        .trClass {
+            cursor: pointer;
+        }
+
+        .tdFrameClass {
+            padding: 5px;
+            border: 1px solid black;
+        }
+
+        #contentBox {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 1400px;
+            height: 950px;
+            background-color: #CCCCCC;
+            padding: 0px;
+            border: 1px solid black;
+            z-index: 1;
+        }
+
+        #menuBox {
+            position: absolute;
+            margin-left: 0px;
+            margin-top: 0px;
+            width: 300px;
+            height: 950px;
+            background-color: #999999;
+            padding: 0px;
+            border-right: 1px solid black;
+        }
+
+        #pictureBox {
+            width: 300px;
+            background-color: white;
+            padding: 10px 0px;
+            border-bottom: 1px solid black;
+        }
+
+        #menuElementsBox {
+            width: 300px;
+            padding: 0px;
+        }
+
+        .menuElementClass {
+            padding: 12px;
+            background-color: #999999;
+            border-bottom: 1px solid black;
+            color: white;
+        }
+
+        .menuElementClass:hover {
+            cursor: pointer;
+            background-color: #CCCCCC;
+            color: black;
+        }
+
+        .contentOfMenu {
+            background-color: #666666;
+            color: white;
+            border-bottom: 1px solid black;
+            padding: 12px;
+        }
+
+        #canvasBox {
+            position: absolute;
+            margin-left: 350px;
+            margin-top: 50px;
+            width: 950px;
+            height: 600px;
+            padding: 0px;
+            background-color: #666666;
+            border: 1px solid black;
+        }
+
+        #can {
+            position: absolute;
+            margin-left: 20px;
+            margin-top: 20px;
+            width: 910px;
+            height: 560px;
+            padding: 0px;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        #layersBox {
+            position: absolute;
+            margin-left: 350px;
+            margin-top: 700px;
+            width: 950px;
+            height: 200px;
+            padding: 0px;
+            background-color: #999999;
+            border: 1px solid black;
+            overflow-y: auto;
+        }
+
+        .canvasImage {
+            width: 100%;
+            height: 100%;
+        }
+
+        #backGroundFonBox {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            opacity: 0.7;
+            z-index: 2;
+        }
+
+        #messageAlertBox {
+            position: fixed;
+            left: 100px;
+            top: 100px;
+            padding: 20px;
+            width: 800px;
+            background-color: white;
+            color: black;
+            border-radius: 5px;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn">OK</button>
+</div>
+
+
+<div id = "contentBox">
+    <div id = "menuBox">
+        <div id = "pictureBox" align = "center">
+            <img src = "./images/titleImage.png" width = "270px" height = "200px">
+        </div>
+        <div id = "menuElementsBox">
+            <div id = "b6" class = "menuElementClass">Проект</div>
+            <div id = "x6" class = "contentOfMenu" hidden>
+                Последний кадр
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q6_t1" value = "799">
+                <button class = "btn" id = "q6_b1">Сохранение и просмотр ролика</button>
+            </div>
+
+            <div id = "b1" class = "menuElementClass">Свойства ролика</div>
+            <div id = "x1" class = "contentOfMenu" hidden>
+                Задний фон
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q1_t1" value = "FFFFFF">
+                Ширина
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q1_t2" value = "910">
+                Высота
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q1_t3" value = "560">
+                <button class = "btn" id = "q1_b1">Применить</button>
+            </div>
+
+            <div id = "b2" class = "menuElementClass">Добавить слой</div>
+            <div id = "x2" class = "contentOfMenu" hidden>
+                <input type = "file" id = "loadFilesBtn" hidden>
+                <button class = "btn" id = "q2_b1">Выбрать изображение</button>
+            </div>
+
+            <div id = "b3" class = "menuElementClass" hidden>Сдвиг кадров</div>
+            <div id = "x3" class = "contentOfMenu" hidden>
+                Количество шагов
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q3_t1" value = "1">
+                <button class = "btn" id = "q3_b1">Left</button>
+                <button class = "btn" id = "q3_b2">Right</button>
+            </div>
+
+            <div id = "b4" class = "menuElementClass" hidden>Выбор кадра</div>
+            <div id = "x4" class = "contentOfMenu" hidden>
+                Номер кадра
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q4_t1" value = "0">
+                <button class = "btn" id = "q4_b1">Выбрать</button>
+            </div>
+
+            <div id = "b5" class = "menuElementClass" hidden>Свойства объекта</div>
+            <div id = "x5" class = "contentOfMenu" hidden>
+                Позиция X
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q5_t1" value = "0">
+                Позиция Y
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q5_t2" value = "0">
+                Ширина
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q5_t3" value = "150">
+                Высота
+                <input type = "text" spellcheck = 'false' autocomplete = 'off' class = "textField" id = "q5_t4" value = "150">
+                <button class = "btn" id = "q5_b1">Применить</button>
+            </div>
+        </div>
+    </div>
+
+    <div id = "canvasBox">
+        <div id = "can"></div>
+    </div>
+
+    <div id = "layersBox"></div>
+</div>
+
+<script src = "./scripts/RESULTSCRIPT.js"></script>
+
+</body>
+</html>

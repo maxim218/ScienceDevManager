@@ -61,7 +61,10 @@
     let arrRolicBtn = null;
 
     function getRolic(element) {
+        const value = element.innerHTML;
         console.log(element.innerHTML);
+        localStorage.setItem("ScienceDev_variable_rolik_name", value);
+        window.location = "watchrolic.html";
     }
 
     function getRolix(login) {
@@ -125,8 +128,8 @@
             }
 
             const movie_name = value.toString();
-
-
+            localStorage.setItem("ScienceDev_variable_rolik_name", movie_name);
+            window.location = "./creatingMovie.html";
         }
     }
 </script>

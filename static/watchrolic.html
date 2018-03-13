@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр ролика</title>
+    <style>
+        @font-face {
+            font-family: myFamily;
+            src: url(./fonts/9041.ttf);
+        }
+
+        body {
+            background-color: #666666;
+            font-family: myFamily;
+            font-size: 20px;
+            padding: 0px;
+        }
+
+        #rolicBox {
+            position: fixed;
+            left: 50px;
+            top: 150px;
+            padding: 0px;
+            border: 1px solid black;
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+
+        #labelBox {
+            position: fixed;
+            left: 50px;
+            top: 40px;
+            color: white;
+            padding: 0px;
+        }
+
+        .canvasImage {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id = "labelBox"></div>
+<div id = "rolicBox"></div>
+
+<script src = "./ajaxFunctions.js"></script>
+
+<script>
+    function loadMovie(callback) {
+        const login = localStorage.getItem("ScienceDev_variable_man_nickname") + "";
+        const rolic = localStorage.getItem("ScienceDev_variable_rolik_name") + "";
+
+        sendPost("get_rolic_by_login_and_name", {
+            loginField: login,
+            movieField: rolic
+        }, (result) => {
+            callback(result + "");
+        });
+    }
+</script>
+
+<script>
+    window.onload = function() {
+        loadMovie((stringLoadContent) => {
+            console.log("Start");
+            console.log("---------------------------------");
+
+            const labelBox = document.getElementById("labelBox");
+            labelBox.innerHTML = "<h1>Ролик: " + localStorage.getItem("ScienceDev_variable_rolik_name") + "</h1>";
+
+            const rolicBox = document.getElementById("rolicBox");
+
+            const contentText = stringLoadContent + "";
+
+            const obj = JSON.parse(contentText);
+
+            const imagesArr = obj.answer;
+            rolicBox.style.backgroundColor = obj.fonColor;
+            rolicBox.style.width = obj.fonWidth;
+            rolicBox.style.height = obj.fonHeight;
+
+            const lastFrame = parseInt(obj.lastFrame);
+            console.log("lastFrame: " + lastFrame);
+
+            console.log("Rolic: " + rolicBox.style.backgroundColor + "  " + rolicBox.style.width + "  " + rolicBox.style.height);
+
+
+            for(let i = 0; i < imagesArr.length; i++) {
+                const image = imagesArr[i];
+                const count = image.name;
+
+                rolicBox.innerHTML += "<div id = 'picture_box_" + count + "' style = 'position: absolute; padding: 0px; height: 150px; width: 150px; margin-left: 0px; margin-top: 0px;'></div>";
+                document.getElementById("picture_box_" + count).innerHTML = "<img src = '" + image.content + "' class = 'canvasImage'>";
+            }
+
+            /********************************************************************/
+
+            function changeProperties(currentImage, now, after) {
+                const frameNumber = after - now - 1;
+
+                if(frameNumber !== 0) {
+
+                    const valuesArr = [
+                        "x", "y", "w", "h",
+                    ];
+
+                    for(let ind = 0; ind < valuesArr.length; ind++) {
+                        const value = valuesArr[ind];
+
+                        const dx = (currentImage.frames[after][value] - currentImage.frames[now][value]) / frameNumber;
+                        let nowValue = currentImage.frames[now][value];
+
+                        for (let i = now + 1; i <= after - 1; i++) {
+                            nowValue += dx;
+                            currentImage.frames[i][value] = parseInt(nowValue);
+                        }
+                    }
+                }
+            }
+
+            for(let qqq = 0; qqq < imagesArr.length; qqq++) {
+                const currentImage = imagesArr[qqq];
+
+                for (let i = 0; i < currentImage.frames.length; i++) {
+                    const frameNow = currentImage.frames[i];
+                    if (frameNow.marked === true) {
+                        const now = i;
+
+                        for (let j = now + 1; j < currentImage.frames.length; j++) {
+                            const frameAfter = currentImage.frames[j];
+                            if (frameAfter.marked === true) {
+                                const after = j;
+                                changeProperties(currentImage, now, after);
+                                i = after - 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /********************************************************************/
+
+            let now = 0;
+
+            let inter = setInterval(() => {
+                for(let i = 0; i < imagesArr.length; i++) {
+                    const image = imagesArr[i];
+
+                    const frame = image.frames[now];
+                    const count = image.name;
+
+                    const box = document.getElementById("picture_box_" + count);
+
+                    console.log("Print frame: " + now);
+
+                    box.style.marginLeft = frame.x + "px";
+                    box.style.marginTop = frame.y + "px";
+                    box.style.width = frame.w + "px";
+                    box.style.height = frame.h + "px";
+
+                    now++;
+
+                    if(now === lastFrame + 1) {
+                        console.log("STOP");
+                        clearInterval(inter);
+                    }
+                }
+            }, 50);
+        });
+    }
+</script>
+
+</body>
+</html>
