@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>modelMaker3D</title>
+    <link rel="stylesheet" href = "allStylesFile.css">
+</head>
+<body>
+
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn" style = "width: 200px;">OK</button>
+</div>
+
+
+<div id = "mainBox">
+
+    <div id = "getResultBox" align = "center">
+        <input id = "btnGetJSON" type = "button" value = "Сохранить" style = "cursor: pointer; width: 100%; height: 100%; background-color: bisque; font-size: 17px; outline: none; border: solid 2px black;">
+    </div>
+
+    <div id = "boxFor3DRender" width = "950px" height = "950px"></div>
+
+    <div id = "menuBox">
+        <h2>Создание 3D объектов</h2>
+        <hr>
+        <br>
+        <button id = "b1">Куб</button>
+        <button id = "b2">Сфера</button>
+        <button id = "b3">Цилиндр</button>
+        <button id = "b4">Пирамида</button>
+
+        <br><br>
+
+        <h2>Камера</h2>
+        <hr>
+        <br>
+        <table>
+            <tr style = "border: solid 2px blue">
+                <td style = "border: solid 2px blue" class = "myRange">X <br>&nbsp;&nbsp;&nbsp;<input id = "rX" type="range" min = "-50" max = "50" step="1" value="0"></td>
+                <td style = "border: solid 2px blue" class = "myRange">Y <br>&nbsp;&nbsp;&nbsp;<input id = "rY" type="range" min = "0" max = "50" step="1" value="50"></td>
+                <td style = "border: solid 2px blue" class = "myRange">Z <br>&nbsp;&nbsp;&nbsp;<input id = "rZ" type="range" min = "-50" max = "50" step="1" value="0"></td>
+            </tr>
+        </table>
+        <br>
+        <button id = "btnTOP">Вид TOP</button>
+        <button id = "btnFRONT">Вид FRONT</button>
+        <button id = "btnLEFT">Вид LEFT</button>
+
+        <br><br>
+
+        <span id = "propBox" hidden>
+            <h2>Свойства</h2>
+            <hr>
+            <br>
+            <table>
+                <tr>
+                    <td>
+                        <b>Позиция</b>
+                        <br><br>
+                        <table>
+                            <tr>  <td>X &nbsp;&nbsp;</td> <td><input id = "px"  type = "text" maxlength = "7" class = "impField"></td> </tr>
+                            <tr>  <td>Y &nbsp;&nbsp;</td> <td><input id = "py"  type = "text" maxlength = "7" class = "impField"></td> </tr>
+                            <tr>  <td>Z &nbsp;&nbsp;</td> <td><input id = "pz"  type = "text" maxlength = "7" class = "impField"></td> </tr>
+                        </table>
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                        <b>Поворот</b>
+                        <br><br>
+                        <table>
+                            <tr>  <td>X &nbsp;&nbsp;</td> <td class = "impField" style = "background-color:bisque"><input id = "rxxx" type="range" style = "width: 200px;" min = "-3.141592653589793" max = "3.141592653589793" step="0.001" value="0"></td> </tr>
+                            <tr>  <td>Y &nbsp;&nbsp;</td> <td class = "impField" style = "background-color:bisque"><input id = "ryyy" type="range" style = "width: 200px;" min = "-3.141592653589793" max = "3.141592653589793" step="0.001" value="0"></td> </tr>
+                            <tr>  <td>Z &nbsp;&nbsp;</td> <td class = "impField" style = "background-color:bisque"><input id = "rzzz" type="range" style = "width: 200px;" min = "-3.141592653589793" max = "3.141592653589793" step="0.001" value="0"></td> </tr>
+                        </table>
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                        <b>Масштаб и цвет</b>
+                        <br><br>
+                        <table>
+                            <tr>  <td><span id = "m4">Цвет</span> &nbsp;&nbsp;</td> <td><input type = "button" class = "btn_3" value = "Выбрать" onclick = "colorClickFunction()"></td> </tr>
+                            <tr>  <td><span id = "m1">Масштаб X</span> &nbsp;&nbsp;</td> <td><input id = "q1"  type = "text" maxlength = "7" class = "impField_2"></td> </tr>
+                            <tr>  <td><span id = "m2">Масштаб Y</span> &nbsp;&nbsp;</td> <td><input id = "q2"  type = "text" maxlength = "7" class = "impField_2"></td> </tr>
+                            <tr>  <td><span id = "m3">Масштаб Z</span> &nbsp;&nbsp;</td> <td><input id = "q3"  type = "text" maxlength = "7" class = "impField_2"></td> </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <hr>
+            <input type = 'color' id = 'colorBtn' hidden>
+            <button id = "dropObjBtn" style = "color: white; background-color: red; font-size: 15px;" onmouseout = "styleFirst(this)" onmouseover = "styleSecond(this)">Удалить 3D объект</button>
+        </span>
+
+    </div>
+</div>
+
+
+<script src = "scripts/threeJSscripts/three.min.js"></script>
+<script src = "scripts/threeJSscripts/Projector.js"></script>
+<script src = "scripts/threeJSscripts/CanvasRenderer.js"></script>
+<script src = "scripts/threeJSscripts/stats.min.js"></script>
+<script src = "scripts/threeJSscripts/dat.gui.min.js"></script>
+
+<script>
+    function styleSecond(obj){
+        obj.style.background = "#ff7e2d";
+    }
+    function styleFirst(obj){
+        obj.style.background = "red";
+    }
+
+    function colorClickFunction(){
+        document.getElementById("colorBtn").click();
+    }
+</script>
+
+<script src = "scripts/ResultScript.js"></script>
+
+</body>
+</html>

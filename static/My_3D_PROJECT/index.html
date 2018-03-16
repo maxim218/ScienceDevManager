@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>modelMaker3D</title>
+    <style>
+        body{
+            background-color: #999999;
+            font-family: Geneva, Arial, Helvetica, sans-serif;
+            color: white;
+            font-size: 20px;
+            padding: 40px;
+        }
+
+        textarea{
+            background-color: white;
+            padding: 10px;
+            color: black;
+            width: 400px;
+            height: 200px;
+            font-size: 20px;
+            border-radius: 10px;
+            outline: none;
+            border: solid 2px black;
+            resize: none;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        button{
+            background-color: bisque;
+            padding: 10px;
+            color: black;
+            font-size: 20px;
+            border-radius: 10px;
+            outline: none;
+            border: solid 2px black;
+            width: 300px;
+        }
+
+        button:hover{
+            cursor: pointer;
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<h2>modelMaker3D</h2>
+<p>
+    <b>
+       Разработчик: Колотовкин Максим
+    </b>
+</p>
+<br>
+<hr>
+<br>
+<br>
+
+<textarea id = "inpTextArea"></textarea>
+<br>
+<br>
+<button onclick = "openProjectFunc()">Открыть проект</button>
+
+<br>
+<br>
+<br>
+<hr>
+<br>
+<br>
+
+<button onclick = "newProjectFunc()">Новый проект</button>
+
+<script>
+    function newProjectFunc(){
+        window.location = "redactor.html";
+    }
+
+    function openProjectFunc(){
+        const field = document.getElementById("inpTextArea");
+        const s = field.value;
+        window.location = "redactor.html?" + s;
+    }
+</script>
+
+</body>
+</html>

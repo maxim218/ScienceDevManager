@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>modelMaker3D</title>
+    <style>
+        body{
+            background-color: #999999;
+            font-family: Geneva, Arial, Helvetica, sans-serif;
+            color: white;
+            font-size: 20px;
+            padding: 40px;
+        }
+
+        textarea{
+            background-color: white;
+            padding: 10px;
+            color: black;
+            width: 400px;
+            height: 200px;
+            font-size: 20px;
+            border-radius: 10px;
+            outline: none;
+            border: solid 2px black;
+            resize: none;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<h2>3D модель в формате JSON</h2>
+<hr>
+<br>
+
+<textarea id = "resTextArea"></textarea>
+
+<script>
+    window.onload = function(){
+        const field = document.getElementById("resTextArea");
+        const s = location.search;
+        let mass = [];
+        mass = s.split("");
+        mass[0] = "";
+        const answer = mass.join("");
+        field.value = answer;
+    }
+</script>
+
+</body>
+</html>
