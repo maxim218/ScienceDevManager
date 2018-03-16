@@ -544,7 +544,7 @@ class JSONcreator{
 
         let answer = encodeURIComponent(JSON.stringify(myObj));
 
-        const projectName = localStorage.getItem("ScienceDev_variable_3d_project");
+        const projectName = localStorage.getItem("ScienceDev_variable_rolik_name");
         const loginField = localStorage.getItem("ScienceDev_variable_man_nickname");
         const passwordField = localStorage.getItem("ScienceDev_variable_man_password");
         const projectContent = answer + "";
