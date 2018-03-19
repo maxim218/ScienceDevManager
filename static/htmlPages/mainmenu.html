@@ -33,6 +33,8 @@
     <br>
     <button class = "btn similarBtnWidth" id = "my3DmodelsBtn">Мои 3D модели</button>
     <br>
+    <button class = "btn similarBtnWidth" id = "myForumsBtn">Форумы</button>
+    <br>
     <button class = "btn similarBtnWidth" id = "exitBtn">Выход</button>
 </div>
 
@@ -50,6 +52,7 @@
     let othetUserBtn = null;
     let myMoviesBtn = null;
     let my3DmodelsBtn = null;
+    let myForumsBtn = null;
     
     window.onload = function() {
         controlUserHash();
@@ -64,6 +67,11 @@
             // очистка локального хранилища
             clearStorage();
             window.location = "/authorization";
+        };
+
+        myForumsBtn = find("myForumsBtn");
+        myForumsBtn.onclick = function() {
+            window.location = "/forums";
         };
 
         myPageBtn = find("myPageBtn");

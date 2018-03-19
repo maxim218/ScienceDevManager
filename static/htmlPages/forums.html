@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScienceDev</title>
+    <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
+    <style>
+        .textAreaClass {
+            min-width: 400px;
+            max-width: 550px;
+            min-height: 200px;
+            max-height: 300px;
+        }
+
+        .listBoxRecord {
+            border: 1px solid white;
+            padding: 20px;
+            width: 700px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn" style = "width: 200px;">OK</button>
+</div>
+
+
+<div id = "mainBox">
+    <div id = "imgBox" align = "center">
+        <img src = "./images/titleImage.png" width = "270px" height = "200px">
+    </div>
+    <h1>Форумы</h1>
+    <h2 id = "loginLabel"></h2>
+    <button class = "btn" onclick = "window.location = '/mainmenu';">Главное меню</button>
+    <p>
+        Название форума
+        <br>
+        <textarea id = "inputForumField" class = "textField textAreaClass"></textarea>
+        <br>
+        <button class = "btn" id = "addForumToDbBtn">Добавить форум</button>
+    </p>
+    <br>
+    <p id = "forumsContentBox"></p>
+</div>
+
+
+<script src = "./../jsScripts/ajaxFunctions.js"></script>
+<script src = "./../jsScripts/alertBoxManage.js"></script>
+<script src = "./../jsScripts/stringControl.js"></script>
+<script src = "./../jsScripts/StorageManager.js"></script>
+<script src = "./../jsScripts/ControlUserHash.js"></script>
+<script src = "./../jsScripts/printTextTags.js"></script>
+
+<script>
+    let loginLabel = null;
+    let forumsContentBox = null;
+    let inputForumField = null;
+    let addForumToDbBtn = null;
+</script>
+
+<script>
+    function goToConversation(value) {
+        console.log("Forum ID: " + value);
+    }
+</script>
+
+<script>
+    function loadForumsList() {
+        forumsContentBox.innerHTML = "";
+        sendGet("get_all_forums", (result) => {
+            forumsContentBox.innerHTML = "";
+            const arr = JSON.parse(result + "");
+
+            let htmlAll = "";
+            for(let i = 0; i < arr.length; i++) {
+                const forumID = parseInt(arr[i].forum_id);
+                console.log(forumID);
+                const forumContent = arr[i].forum_content + "";
+                const forumUser = arr[i].forum_user + "";
+                const normalforumContent = getNormalText(forumContent) + "";
+                const html = "<div class = 'listBoxRecord'><h3>Форум " + (arr.length - i) + "</h3><h3>Автор: " + forumUser + "</h3><p>" + normalforumContent + "</p><button onclick = 'goToConversation(" + forumID +")' class = 'btn'>Перейти к обсуждению</button></div><div style = 'padding-top: 15px;'></div>";
+                htmlAll += html.toString();
+            }
+
+            htmlAll = "<h2>Список форумов</h2>" + htmlAll;
+            forumsContentBox.innerHTML = htmlAll;
+        });
+    }
+</script>
+
+
+<script>
+    window.onload = function() {
+        "use strict";
+
+        controlUserHash();
+
+        forumsContentBox = find("forumsContentBox");
+        loginLabel = find("loginLabel");
+        inputForumField = find("inputForumField");
+        addForumToDbBtn = find("addForumToDbBtn");
+
+        if(getStorageVar("man_nickname") !== null && getStorageVar("man_nickname") !== undefined) {
+            loginLabel.innerHTML = "Пользователь: " + getStorageVar("man_nickname");
+        }
+
+        forumsContentBox.innerHTML = "";
+        loadForumsList();
+
+        addForumToDbBtn.onclick = () => {
+            console.log("CLICK");
+            const value = inputForumField.value + "";
+
+            if(value === "") {
+                showAlert("Поле ввода названия форума пусто.");
+                return;
+            }
+
+            const loginField = getStorageVar("man_nickname") + "";
+            const passwordField = getStorageVar("man_password") + "";
+            const forumField = value + "";
+
+            sendPost("add_forum", {
+                loginField: loginField,
+                passwordField: passwordField,
+                forumField: forumField
+            }, (result) => {
+                if(result === "__INSERT_FORUM_OK__") {
+                    showAlert("Форум успешно создан.", () => {
+                        location.reload();
+                    });
+                }
+            });
+        };
+    }
+</script>
+
+</body>
+</html>
