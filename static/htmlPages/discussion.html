@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScienceDev</title>
+    <link rel = "stylesheet" type = "text/css" href = "./../cssStyles/basicStyle.css"/>
+    <style>
+        .textAreaClass {
+            min-width: 400px;
+            max-width: 550px;
+            min-height: 200px;
+            max-height: 300px;
+        }
+
+        .listBoxRecord {
+            border: 1px solid white;
+            padding: 20px;
+            width: 700px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id = 'backGroundFonBox' hidden></div>
+<div id = 'messageAlertBox' align = "center" hidden>
+    <span style = "font-size: 25px;">Сообщение</span>
+    <div style = "padding-top: 10px;"></div>
+    <p id = "messageContentParag"></p>
+    <button class = "btn" id = "closeAlertBtn" style = "width: 200px;">OK</button>
+</div>
+
+
+<div id = "mainBox">
+    <div id = "imgBox" align = "center">
+        <img src = "./images/titleImage.png" width = "270px" height = "200px">
+    </div>
+    <h1>Обсуждение темы</h1>
+    <h2 id = "loginLabel"></h2>
+    <button class = "btn" onclick = "window.location = '/mainmenu';">Главное меню</button>
+    <p>
+        Текст комментария
+        <br>
+        <textarea id = "inputTextOfMessageField" class = "textField textAreaClass"></textarea>
+        <br>
+        <button class = "btn" id = "addMessageBTN">Добавить комментарий</button>
+    </p>
+    <br>
+    <p>
+        <h2>Название форума</h2>
+        <span id = "forumTemaContent"></span>
+    </p>
+    <br>
+    <p id = "messagesBoxContent"></p>
+</div>
+
+
+<script src = "./../jsScripts/ajaxFunctions.js"></script>
+<script src = "./../jsScripts/alertBoxManage.js"></script>
+<script src = "./../jsScripts/stringControl.js"></script>
+<script src = "./../jsScripts/StorageManager.js"></script>
+<script src = "./../jsScripts/ControlUserHash.js"></script>
+<script src = "./../jsScripts/printTextTags.js"></script>
+
+<script>
+    "use strict";
+
+    let forumTemaContent = null;
+    let messagesBoxContent = null;
+
+    function loadMessages() {
+        messagesBoxContent.innerHTML = "";
+
+        sendPost("get_forum_messages", {
+            forumID: localStorage.getItem("Forum_id_watch")
+        }, (result) => {
+            messagesBoxContent.innerHTML = "";
+            const arr = JSON.parse(result + "");
+
+            if(arr.length === 0) {
+                const htmlContent = "<h2>Комментарии пользователей</h2><h3>На данный момент комментарии отсутствуют.</h3>";
+                messagesBoxContent.innerHTML = htmlContent.toString();
+                return;
+            }
+
+            if(arr.length > 0) {
+                 let htmlContent = "<h2>Комментарии пользователей</h2>";
+
+                 for (let i = 0; i < arr.length; i++) {
+                     const element = arr[i];
+                     const content = getNormalText(element.m_content + "") + "";
+                     const user = element.m_user;
+                     const html = "<div class = 'listBoxRecord'><h3>Комментарий " + (arr.length - i) + "</h3><h3>Автор: " + user + "</h3><p>" + content + "</p></div><div style = 'padding-top: 15px;'></div>";
+                     htmlContent += html.toString();
+                 }
+
+                messagesBoxContent.innerHTML = htmlContent;
+            }
+        });
+    }
+
+    window.onload = function() {
+        controlUserHash();
+
+        const loginLabel = find("loginLabel");
+        if(getStorageVar("man_nickname") !== null && getStorageVar("man_nickname") !== undefined) {
+            loginLabel.innerHTML = "Пользователь: " + getStorageVar("man_nickname");
+        }
+
+        forumTemaContent = find("forumTemaContent");
+        forumTemaContent.innerHTML = "";
+
+        messagesBoxContent = find("messagesBoxContent");
+        messagesBoxContent.innerHTML = "";
+
+        loadMessages();
+    }
+</script>
+
+</body>
+</html>

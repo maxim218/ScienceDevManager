@@ -67,6 +67,9 @@
 <script>
     function goToConversation(value) {
         console.log("Forum ID: " + value);
+        localStorage.setItem("Forum_id_watch", value);
+        // go to other page
+        window.location = "/discussion";
     }
 </script>
 
