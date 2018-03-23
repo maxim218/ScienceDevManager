@@ -17,6 +17,14 @@
             width: 700px;
             overflow-x: auto;
         }
+
+        .listBoxRecordOne {
+            border: 1px solid yellow;
+            padding: 20px;
+            width: 700px;
+            overflow-x: auto;
+            background-color: #615348;
+        }
     </style>
 </head>
 <body>
@@ -67,6 +75,28 @@
 
     let forumTemaContent = null;
     let messagesBoxContent = null;
+    let addMessageBTN = null;
+    let inputTextOfMessageField = null;
+
+    function loadForumContent() {
+        forumTemaContent.innerHTML = "";
+        const forumID = localStorage.getItem("Forum_id_watch");
+
+        sendGet("get_all_forums", (result) => {
+            forumTemaContent.innerHTML = "";
+            const arr = JSON.parse(result + "");
+
+            for(let i = 0; i < arr.length; i++) {
+                const forum = arr[i];
+                if( parseInt(forum.forum_id) === parseInt(forumID) ) {
+                    const content = getNormalText(forum.forum_content + "");
+                    const html = "<div class = 'listBoxRecordOne'><h3>Автор: " + forum.forum_user + "</h3><p>" + content + "</p></div><div style = 'padding-top: 15px;'></div>";
+                    forumTemaContent.innerHTML = html.toString();
+                    return;
+                }
+            }
+        });
+    }
 
     function loadMessages() {
         messagesBoxContent.innerHTML = "";
@@ -109,11 +139,40 @@
 
         forumTemaContent = find("forumTemaContent");
         forumTemaContent.innerHTML = "";
+        loadForumContent();
 
         messagesBoxContent = find("messagesBoxContent");
         messagesBoxContent.innerHTML = "";
 
         loadMessages();
+
+        inputTextOfMessageField = find("inputTextOfMessageField");
+        addMessageBTN = find("addMessageBTN");
+        addMessageBTN.onclick = function () {
+            const value = inputTextOfMessageField.value + "";
+            if(value === "") {
+                showAlert("Поле ввода текста комментария пусто.");
+                return;
+            }
+
+            const loginField = getStorageVar("man_nickname") + "";
+            const passwordField = localStorage.getItem("ScienceDev_variable_man_password") + "";
+            const forumID = localStorage.getItem("Forum_id_watch") + "";
+            const messageContent = value + "";
+
+            sendPost("add_message", {
+                loginField: loginField,
+                passwordField: passwordField,
+                forumID: forumID,
+                messageContent: messageContent
+            }, (result) => {
+                if(result === "__INSERT_OK__") {
+                    showAlert("Комментарий успешно добавлен.", () => {
+                        location.reload();
+                    });
+                }
+            });
+        }
     }
 </script>
 
